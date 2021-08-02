@@ -1,0 +1,36 @@
+#
+# Read 3 data products from a primary file and a secondary input file.
+#
+
+#include "Offline/fcl/minimalMessageService.fcl"
+
+process_name : join
+
+source : {
+  module_type :  RootInput
+  fileNames   : [ "trkcal.art" ]
+  secondaryFileNames: [
+     {
+        a : "trkcal.art"
+        b : [ "crv_1.art", "crv_2.art"  ]
+     }
+  ]
+}
+
+services : {
+  message : @local::default_message
+}
+
+physics : {
+  analyzers: {
+
+    readall : {
+      module_type : ToyAnalyzer
+      tags        : [ "maketrk", "makecal", "makecrv" ]
+    }
+
+  }
+
+  t1 : [ readall ]
+
+}

@@ -1,0 +1,70 @@
+#
+# Make all 3 data products in one job.
+#
+
+#include "Offline/fcl/minimalMessageService.fcl"
+
+process_name : daq
+
+source : {
+  module_type : EmptyEvent
+  maxEvents   : 10
+}
+
+services : {
+  message : @local::default_message
+}
+
+physics : {
+  producers: {
+
+    maketrk : {
+      module_type : ToyProducer
+      type        : 1
+    }
+
+    makecal : {
+      module_type : ToyProducer
+      type        : 2
+    }
+
+    makecrv : {
+      module_type : ToyProducer
+      type        : 3
+    }
+
+  }
+
+  t1 : [ maketrk, makecal, makecrv ]
+  e1 : [ outall, outtrkcal, outcrv ]
+
+}
+
+outputs : {
+
+  outall : {
+    module_type : RootOutput
+    fileName    : "all.art"
+  }
+
+  outtrkcal : {
+    module_type : RootOutput
+    fileName    : "trkcal.art"
+    outputCommands : [  'keep *_*_*_*'
+                      , 'drop *_makecrv_*_*'
+                     ]
+  }
+
+  outcrv : {
+    module_type : RootOutput
+    fileName    : "crv_%#.art"
+    fileProperties: {
+      maxEvents : 5
+    }
+    outputCommands : [  'keep *_*_*_*'
+                      , 'drop *_maketrk_*_*'
+                      , 'drop *_makecal_*_*'
+                     ]
+  }
+
+}

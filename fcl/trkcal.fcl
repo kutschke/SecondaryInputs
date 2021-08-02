@@ -1,0 +1,45 @@
+#
+# Make just the trk and cal data products in one job.
+#
+
+#include "Offline/fcl/minimalMessageService.fcl"
+
+process_name : daq
+
+source : {
+  module_type : EmptyEvent
+  maxEvents   : 10
+}
+
+services : {
+  message : @local::default_message
+}
+
+physics : {
+  producers: {
+
+    maketrk : {
+      module_type : ToyProducer
+      type        : 1
+    }
+
+    makecal : {
+      module_type : ToyProducer
+      type        : 2
+    }
+
+  }
+
+  t1 : [ maketrk, makecal  ]
+  e1 : [ outtrkcal ]
+
+}
+
+outputs : {
+
+  outtrkcal : {
+    module_type : RootOutput
+    fileName    : "trkcal_solo.art"
+  }
+
+}
