@@ -1,5 +1,7 @@
 #
-# Make just the trk and cal data products in one job.
+# Make just the crv data product in one job.
+# Split it into 2 files.
+# Different process name than trkcal.fcl
 #
 
 #include "Offline/fcl/minimalMessageService.fcl"
