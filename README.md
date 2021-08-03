@@ -41,10 +41,12 @@ This job makes 4 art files:   all.art trkcal.art crv_1.art crv_2.art
 
 You can examine that each file has the expected content with the following:
 
+<pre>
 > `mu2e -c SecondaryInputs/fcl/read.fcl -s all.art`
 > `mu2e -c SecondaryInputs/fcl/read.fcl -s trkcal.art`
 > `mu2e -c SecondaryInputs/fcl/read.fcl -s crv_1.art`
 > `mu2e -c SecondaryInputs/fcl/read.fcl -s crv_2.art`
+</pre>
 
 The following job will read trkcal.art as the primary input
 with crv_1.art and crv_2.art as secondary inputs:
