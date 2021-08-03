@@ -9,8 +9,15 @@ in the TDAQ system.
 
 One of the first steps in processing the data will be to join the two files into one.
 We propose to use the secondary input features of art to do this.
-This repo contains some exercises that show that, with an important caveat, this will work.
-The caveat is that the art jobs that write the two data file MUST have the same art process_name.
+This repo contains some exercises that show that the basic funcationality works but there
+are issues that we need to work around:
+
+1. The art jobs that write the two data files MUST have the same art process_name.
+2. We expect that events written to the two files will not be sorted in order of
+   increasing `art::EventID`; moreover they order will be different in the crv file
+   than it is in the trk+cal file.  In this case the job that merges the two
+   files into one must not set `noEventSort : true` in the configuration of the RootInput module;
+   the default is `false`.
 
 To do exercise this you need to setup an appropriate version of art; it should
 work with any recent version of art.  For example you can setup the
@@ -209,6 +216,11 @@ from the primary input file:
 </pre>
 Inspection of the output from the first job shows that art did not correctly find the crv data product
 for any of the events.
+
+The conclusion is that we must not use `noEventSort : true` in the configuration of RootInput when
+merging the two data files.  This is probably not a serious constraint because we probably don't
+want to do this anyway.
+
 
 
 
