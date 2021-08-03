@@ -2,27 +2,42 @@
 Code to exercise the secondary input feature of art and test if it will work
 as we need it to when we merge the file streams that come from Offline.
 
-To exercise this:
+To exercise this you need to setup an appropriate version of art.
+You can do this by using the current Musing of Offline.
+This should work with any version of art.  If it does not we need to fix it.
 
-setup mu2e
-setup muse
-muse link Offline                                           # This must work with any verison of art so use one used by the current Offline Musing
-git clone https://github.com/kutschke/SecondaryInputs.git
-muse build -j 8
+To establish the environment and build the code:
 
-## Step 1.
-Run a job to make 4 art files: all.art trkcal.art crv_1.art crv_2.art
+1. setup mu2e
+2. setup muse
+3. muse link Offline
+4. git clone https://github.com/kutschke/SecondaryInputs.git
+5. muse setup -1
+5. muse build -j 8
 
-all.art contains 10 events with 3 data products each.  There is one data product to mock up the data from each of the trk, cal and crv.
+## Example 1.
 
-trkcal.art contains the same 10 events but only the trk and cal data products
+Secondary input files are only advertised to work if the secondary files "share a common history with the primary".
+This is the example that is advertised by art to work.
+> `mu2e -c SecondaryInputs/fcl/all.fcl`
+This job creates 3 toy data products, one to represent the trk data,
+one for the cal data and one for the crv data.  Each is made by it's own
+module labels maketrk, makecal and makecrv.  The toy data product is a
+a single integer with the structure:
+> `10000*A + N`
+where A is 1 for the tracker, 2 for the calorimeter and 3 for the crv.
 
-crv_1.art contains the only the crv data product but only for the first 5 events.
-crv_2.art contains the only the crv data product but only for the last 5 events.
+This job makes 4 art files:   all.art trkcal.art crv_1.art crv_2.art
+
+| File | Content |
+|------|---------|
+| all.art    | events 1...10, with all of the trk, cal and crv toy data products |
+| trkcal.art | events 1...10, with only the trk and cal data products |
+| crv_1.art  | events 1...5, with only the crv data product|
+| crv_2.art  | events 6...10, with only the crv data product|
 
 
 
-mu2e -c SecondaryInputs/fcl/all.fcl
 mu2e -c SecondaryInputs/fcl/read.fcl -s all.art
 
 
