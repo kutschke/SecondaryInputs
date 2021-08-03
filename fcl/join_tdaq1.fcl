@@ -4,15 +4,15 @@
 
 #include "Offline/fcl/minimalMessageService.fcl"
 
-process_name : join
+process_name : joinTDAQ1
 
 source : {
   module_type :  RootInput
-  fileNames   : [ "trkcal.art" ]
+  fileNames   : [ "trkcal_tdaq.art" ]
   secondaryFileNames: [
      {
-        a : "trkcal.art"
-        b : [ "crv_1.art", "crv_2.art"  ]
+        a : "trkcal_tdaq.art"
+        b : [ "crv_tdaq1_1.art",  "crv_tdaq1_2.art" ]
      }
   ]
 }
@@ -35,11 +35,12 @@ physics : {
   e1 : [ outjoin ]
 
 }
+
 outputs : {
 
   outjoin : {
     module_type : RootOutput
-    fileName    : "join.art"
+    fileName    : "join_tdaq1.art"
   }
 
 }

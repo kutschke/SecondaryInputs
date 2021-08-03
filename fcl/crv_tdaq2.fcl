@@ -4,7 +4,7 @@
 
 #include "Offline/fcl/minimalMessageService.fcl"
 
-process_name : daq
+process_name : tdaq2
 
 source : {
   module_type : EmptyEvent
@@ -18,28 +18,26 @@ services : {
 physics : {
   producers: {
 
-    maketrk : {
+    makecrv : {
       module_type : ToyProducer
-      type        : 1
-    }
-
-    makecal : {
-      module_type : ToyProducer
-      type        : 2
+      type        : 3
     }
 
   }
 
-  t1 : [ maketrk, makecal  ]
-  e1 : [ outtrkcal ]
+  t1 : [ makecrv  ]
+  e1 : [ outcrv ]
 
 }
 
 outputs : {
 
-  outtrkcal : {
+  outcrv : {
     module_type : RootOutput
-    fileName    : "trkcal_tdaq.art"
+    fileName    : "crv_tdaq2_%#.art"
+    fileProperties: {
+      maxEvents : 5
+    }
   }
 
 }
