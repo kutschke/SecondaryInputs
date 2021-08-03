@@ -2,6 +2,12 @@
 Code to exercise the secondary input feature of art and test if it will work
 as we need it to when we merge the file streams that come from Offline.
 
+The bottom line is that if we create the crv data file in a separate art process
+from the trk+cal data file, then we can merge them using the secondary input file
+method.  This only works if the two file creating processes have the same art
+process_name.  That is, the two art processes running under the `artdaq::DataLogger`
+instances must have the same art process_name.
+
 To exercise this you need to setup an appropriate version of art.
 You can do this by using the current Musing of Offline.
 This should work with any version of art.  If it does not we need to fix it.
@@ -59,39 +65,71 @@ with crv_1.art and crv_2.art as secondary inputs:
   mu2e -c SecondaryInputs/fcl/join.fcl
 </pre>
 
-You can verify that it produces the same output as running read.fcl on all.art.
+You can verify that it produces the same output as running `read.fcl` on `all.art`.
+
+This job also writes the merged output to the file `join.art`.
+You can run `read.fcl` on this file and verify that it too makes the same output
+as running `read.fcl` on `all.art`.
 
 
 # Exercise 2
 
-This exercise mocks up what we will really do in the TDAQ: one art job makes
+This exercise mocks up what we will do in the TDAQ: one art job makes
 the trk + cal file while a second art job makes the crv file.
+The third art job merges the two files.
 To start this exercise run two jobs:
 
 <pre>
    mu2e -c SecondaryInputs/fcl/trkcal.fcl
-   mu2e -c SecondaryInputs/fcl/crv.fcl
+   mu2e -c SecondaryInputs/fcl/crv_tdaq1.fcl
 </pre>
 
-The first job runs the trk and cal parts of all.fcl and writes out those data products to a file `trkcal_solo.art`.
-The second job runs the crv part of all.fcl and writes that data product to the file `crv_solo_1.art` and `crv_solo_2.art`;
+Note that both jobs have the *same* art process_name.  This is critical to making the example work.
+
+The first job runs the trk and cal parts of all.fcl and writes out those data products to a file `trkcal_tdaq.art`.
+The second job runs the crv part of all.fcl and writes that data product to the file `crv_tdaq1_1.art` and `crv_tdaq1_2.art`;
 again each of the crv files contain a 5 events.
 
 You can verify that these files have the expected content:
 
 <pre>
-   mu2e -c SecondaryInputs/fcl/read.fcl -s trkcal_solo.art
-   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_solo_1.art
-   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_solo_2.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s trkcal_tdaq.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_tdaq1_1.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_tdaq1_2.art
 </pre>
-To complete the exercise, run the following job to read `trkcal_solo.art1` as the primary input file
-and the two `crv_solo` files as the secondaries:
+To complete the exercise, run the following job to read `trkcal_tdaq.art` as the primary input file
+and the two `crv_tdaq1*` files as the secondaries:
 
 <pre>
-   mu2e -c SecondaryInputs/fcl/join_solo.fcl
+   mu2e -c SecondaryInputs/fcl/join_tdaq1.fcl
 </pre>
-This makes the same output as running read.fcl on all.art
+This makes the same output as running `read.fcl` on `all.art`.
+It also writes the output file `join_tdaq1.art`.  You can run `read.fcl` on this to verify that it too is correct.
 
-So it all works.
+So far it all works.
 
 
+## Exercise 3.
+
+This exercise, is almost identical to exercise 2, the difference being that the art process_name of `crv_tdaq2.fcl`
+is different than that of `trkcal.fcl`.  It's file distinguished from those of exercise 2 by the substitution
+`tdaq1` with `tdaq2`.  The steps are:
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/crv_tdaq2.fcl
+</pre>
+This makes the files, `crv_tdaq2_1.art` and `crv_tdaq2_2.art`. You can verify that these files have the expected content:
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_tdaq2_1.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_tdaq2_2.art
+</pre>
+Next run the following job to read `trkcal_tdaq.art` as the primary input file
+and the two `crv_tdaq2` files as the secondaries:
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/join_tdaq2.fcl
+</pre>
+
+The printout from this job is correct.  The job also writes the output file `join_tdaq2.art`.
+If you inspect this file using `read.fcl` you will see that the crv data products are missing.
