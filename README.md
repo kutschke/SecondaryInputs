@@ -23,7 +23,11 @@ To establish the environment and build the code:
 3. muse link Offline
 4. git clone https://github.com/kutschke/SecondaryInputs.git
 5. muse setup -1
-5. muse build -j 8
+6. muse build -j 8
+7. mkdir <path to your space on a data disk>
+8. ln -s <path to your space on a data disk> data
+
+Instead of steps 7 and 8 you could just `mkdir data`.
 
 ## Exercise 1.
 
@@ -45,7 +49,7 @@ a single integer with the structure:
 </pre>
 
 where A is 1 for the tracker, 2 for the calorimeter and 3 for the crv; N is the event number.
-This job makes 4 art files:
+This job makes 4 art files, all in the subdirectory data/:
 
 | File | Content |
 |------|---------|
@@ -57,10 +61,10 @@ This job makes 4 art files:
 You can examine that each file has the expected content with the following:
 
 <pre>
-   mu2e -c SecondaryInputs/fcl/read.fcl -s all.art
-   mu2e -c SecondaryInputs/fcl/read.fcl -s trkcal.art
-   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_1.art
-   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_2.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/all.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/trkcal.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/crv_1.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/crv_2.art
 </pre>
 
 The following job will read trkcal.art as the primary input
@@ -81,7 +85,9 @@ as running `read.fcl` on `all.art`.
 
 This exercise mocks up what we will do in the TDAQ: one art job makes
 the trk + cal file while a second art job makes the crv file.
-A third art job merges the two files. To start this exercise run two jobs:
+A third art job merges the two files.
+ Again all files are written to the subdirectory data/.
+To start this exercise run two jobs:
 
 <pre>
    mu2e -c SecondaryInputs/fcl/trkcal.fcl
@@ -97,9 +103,9 @@ again each of the crv files contains 5 events.
 You can verify that these files have the expected content:
 
 <pre>
-   mu2e -c SecondaryInputs/fcl/read.fcl -s trkcal_tdaq.art
-   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_tdaq1_1.art
-   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_tdaq1_2.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/trkcal_tdaq.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/crv_tdaq1_1.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/crv_tdaq1_2.art
 </pre>
 To complete the exercise, run the following job to read `trkcal_tdaq.art` as the primary input file
 and the two `crv_tdaq1*` files as the secondaries:
@@ -126,8 +132,8 @@ is different than that of `trkcal.fcl`.  It's files are distinguished from those
 This makes the files, `crv_tdaq2_1.art` and `crv_tdaq2_2.art`. You can verify that these files have the expected content:
 
 <pre>
-   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_tdaq2_1.art
-   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_tdaq2_2.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/crv_tdaq2_1.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/crv_tdaq2_2.art
 </pre>
 Next run the following job to read `trkcal_tdaq.art` as the primary input file
 and the two `crv_tdaq2` files as the secondaries:
