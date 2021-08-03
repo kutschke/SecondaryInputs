@@ -36,7 +36,7 @@ outputs : {
 
   outcrv : {
     module_type : RootOutput
-    fileName    : "crv_tdaq2_%#.art"
+    fileName    : "data/crv_tdaq2_%#.art"
     fileProperties: {
       maxEvents : 5
     }

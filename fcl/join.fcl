@@ -8,11 +8,11 @@ process_name : join
 
 source : {
   module_type :  RootInput
-  fileNames   : [ "trkcal.art" ]
+  fileNames   : [ "data/trkcal.art" ]
   secondaryFileNames: [
      {
-        a : "trkcal.art"
-        b : [ "crv_1.art", "crv_2.art"  ]
+        a : "data/trkcal.art"
+        b : [ "data/crv_1.art", "data/crv_2.art"  ]
      }
   ]
 }
@@ -39,7 +39,7 @@ outputs : {
 
   outjoin : {
     module_type : RootOutput
-    fileName    : "join.art"
+    fileName    : "data/join.art"
   }
 
 }

@@ -39,7 +39,7 @@ outputs : {
 
   outtrkcal : {
     module_type : RootOutput
-    fileName    : "trkcal_tdaq.art"
+    fileName    : "data/trkcal_tdaq.art"
   }
 
 }

@@ -44,12 +44,12 @@ outputs : {
 
   outall : {
     module_type : RootOutput
-    fileName    : "all.art"
+    fileName    : "data/all.art"
   }
 
   outtrkcal : {
     module_type : RootOutput
-    fileName    : "trkcal.art"
+    fileName    : "data/trkcal.art"
     outputCommands : [  'keep *_*_*_*'
                       , 'drop *_makecrv_*_*'
                      ]
@@ -57,7 +57,7 @@ outputs : {
 
   outcrv : {
     module_type : RootOutput
-    fileName    : "crv_%#.art"
+    fileName    : "data/crv_%#.art"
     fileProperties: {
       maxEvents : 5
     }

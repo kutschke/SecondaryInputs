@@ -8,11 +8,11 @@ process_name : joinTDAQ1
 
 source : {
   module_type :  RootInput
-  fileNames   : [ "trkcal_tdaq.art" ]
+  fileNames   : [ "data/trkcal_tdaq.art" ]
   secondaryFileNames: [
      {
-        a : "trkcal_tdaq.art"
-        b : [ "crv_tdaq1_1.art",  "crv_tdaq1_2.art" ]
+        a : "data/trkcal_tdaq.art"
+        b : [ "data/crv_tdaq1_1.art",  "data/crv_tdaq1_2.art" ]
      }
   ]
 }
@@ -40,7 +40,7 @@ outputs : {
 
   outjoin : {
     module_type : RootOutput
-    fileName    : "join_tdaq1.art"
+    fileName    : "data/join_tdaq1.art"
   }
 
 }

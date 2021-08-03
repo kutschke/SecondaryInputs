@@ -78,7 +78,11 @@ You can verify that it produces the same output as running `read.fcl` on `all.ar
 
 This job also writes the merged output to the file `join.art`.
 You can run `read.fcl` on this file and verify that it too makes the same output
-as running `read.fcl` on `all.art`.
+as running `read.fcl` on `all.art`:
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/join.art
+</pre>
 
 
 # Exercise 2
@@ -91,7 +95,7 @@ To start this exercise run two jobs:
 
 <pre>
    mu2e -c SecondaryInputs/fcl/trkcal.fcl
-   mu2e -c SecondaryInputs/fcl/crv_tdaq1.fcl
+   mu2e -c SecondaryInputs/fcl/crv.fcl
 </pre>
 
 Note that both jobs have the *same* art process_name; this is critical to making the example work.
@@ -114,9 +118,13 @@ and the two `crv_tdaq1*` files as the secondaries:
    mu2e -c SecondaryInputs/fcl/join_tdaq1.fcl
 </pre>
 This makes the same output as running `read.fcl` on `all.art`.
-It also writes the output file `join_tdaq1.art`.  You can run `read.fcl` on this to verify that it too is correct.
+It also writes the output file `join_tdaq1.art`.  You can run `read.fcl` on this to verify that it too is correct:
 
-So we have an existence proof that this will work for our use case.
+<pre>
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/join_tdaq1.art
+</pre>
+
+So we have an existence proof that this will work for the minimal version of our use case.
 We should add this test as part of the acceptance for a new art or ask that the art team do the equivalent.
 
 
@@ -145,7 +153,11 @@ and the two `crv_tdaq2` files as the secondaries:
 The printout from this job is correct; this surprised me.
 
 The job also writes the output file `join_tdaq2.art`.
-If you inspect this file using `read.fcl` you will see that the crv data products are missing.
+If you inspect this file using `read.fcl` you will see that the crv data products are missing:
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/join_tdaq2.art
+</pre>
 
 ## Exercise 4.
 
