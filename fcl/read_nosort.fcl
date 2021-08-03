@@ -1,0 +1,30 @@
+#
+# Print all of the data products that are found in a single file.
+#
+
+#include "Offline/fcl/minimalMessageService.fcl"
+
+process_name : readdaq
+
+source : {
+  module_type :  RootInput
+  noEventSort : true
+}
+
+services : {
+  message : @local::default_message
+}
+
+physics : {
+  analyzers: {
+
+    readall : {
+      module_type : ToyAnalyzer
+      tags        : [ "maketrk", "makecal", "makecrv" ]
+    }
+
+  }
+
+  t1 : [ readall ]
+
+}
