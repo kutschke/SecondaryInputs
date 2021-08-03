@@ -1,0 +1,37 @@
+#
+# Read from a list of files given on the command line.
+#
+
+#include "Offline/fcl/minimalMessageService.fcl"
+
+process_name : join
+
+source : {
+  module_type :  RootInput
+}
+
+services : {
+  message : @local::default_message
+}
+
+physics : {
+  analyzers: {
+
+    readall : {
+      module_type : ToyAnalyzer
+      tags        : [ "maketrk", "makecal", "makecrv" ]
+    }
+
+  }
+
+  t1 : [ readall ]
+  e1 : [ outjoin ]
+
+}
+outputs : {
+
+  outjoin : {
+    module_type : RootOutput
+  }
+
+}

@@ -1,0 +1,44 @@
+#
+# Make just the crv data product in one job.
+# Write one event per file so that we can make a file with everything out of order.
+#
+
+#include "Offline/fcl/minimalMessageService.fcl"
+
+process_name : daq
+
+source : {
+  module_type : EmptyEvent
+  maxEvents   : 20
+}
+
+services : {
+  message : @local::default_message
+}
+
+physics : {
+  producers: {
+
+    makecrv : {
+      module_type : ToyProducer
+      type        : 3
+    }
+
+  }
+
+  t1 : [ makecrv  ]
+  e1 : [ outcrv ]
+
+}
+
+outputs : {
+
+  outcrv : {
+    module_type : RootOutput
+    fileName    : "data/crv_split_%#.art"
+    fileProperties: {
+      maxEvents : 1
+    }
+  }
+
+}
