@@ -18,16 +18,20 @@ To establish the environment and build the code:
 ## Example 1.
 
 Secondary input files are only advertised to work if the secondary files "share a common history with the primary".
-This is the example that is advertised by art to work.
+This is the example that is advertised by art to work.  The second exercise will try what we need to do in the TDAQ.
 
-> `mu2e -c SecondaryInputs/fcl/all.fcl`
+<pre>
+   mu2e -c SecondaryInputs/fcl/all.fcl
+</pre>
 
 This job creates 3 toy data products, one to represent the trk data,
 one for the cal data and one for the crv data.  Each is made by it's own
 module labels maketrk, makecal and makecrv.  The toy data product is
 a single integer with the structure:
 
-> `10000*A + N`
+<pre>
+   10000*A + N
+</pre>
 
 where A is 1 for the tracker, 2 for the calorimeter and 3 for the crv.
 This job makes 4 art files:   all.art trkcal.art crv_1.art crv_2.art
@@ -42,17 +46,17 @@ This job makes 4 art files:   all.art trkcal.art crv_1.art crv_2.art
 You can examine that each file has the expected content with the following:
 
 <pre>
-   `mu2e -c SecondaryInputs/fcl/read.fcl -s all.art`
-   `mu2e -c SecondaryInputs/fcl/read.fcl -s trkcal.art`
-   `mu2e -c SecondaryInputs/fcl/read.fcl -s crv_1.art`
-   `mu2e -c SecondaryInputs/fcl/read.fcl -s crv_2.art`
+   mu2e -c SecondaryInputs/fcl/read.fcl -s all.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s trkcal.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_1.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_2.art
 </pre>
 
 The following job will read trkcal.art as the primary input
 with crv_1.art and crv_2.art as secondary inputs:
 
 <pre>
- `mu2e -c SecondaryInputs/fcl/join.fcl`
+  mu2e -c SecondaryInputs/fcl/join.fcl
 </pre>
 
 You can verify that it produces the same output as running read.fcl on all.art.
@@ -65,8 +69,8 @@ the trk + cal file while a second art job makes the crv file.
 To start this exercise run two jobs:
 
 <pre>
-   `mu2e -c SecondaryInputs/fcl/trkcal.fcl`
-   `mu2e -c SecondaryInputs/fcl/crv.fcl`
+   mu2e -c SecondaryInputs/fcl/trkcal.fcl
+   mu2e -c SecondaryInputs/fcl/crv.fcl
 </pre>
 
 The first job runs the trk and cal parts of all.fcl and writes out those data products to a file `trkcal_solo.art`.
@@ -76,15 +80,15 @@ again each of the crv files contain a 5 events.
 You can verify that these files have the expected content:
 
 <pre>
-   `mu2e -c SecondaryInputs/fcl/read.fcl -s trkcal_solo.art`
-   `mu2e -c SecondaryInputs/fcl/read.fcl -s crv_solo_1.art`
-   `mu2e -c SecondaryInputs/fcl/read.fcl -s crv_solo_2.art`
-<pre>
+   mu2e -c SecondaryInputs/fcl/read.fcl -s trkcal_solo.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_solo_1.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s crv_solo_2.art
+</pre>
 To complete the exercise, run the following job to read `trkcal_solo.art1` as the primary input file
 and the two `crv_solo` files as the secondaries:
 
 <pre>
-   `mu2e -c SecondaryInputs/fcl/join_solo.fcl`
+   mu2e -c SecondaryInputs/fcl/join_solo.fcl
 </pre>
 This makes the same output as running read.fcl on all.art
 
