@@ -1,16 +1,20 @@
 # SecondaryInputs
-Code to exercise the secondary input feature of art and test if it will work
-as we need it to when we merge the file streams that come from Offline.
 
-The bottom line is that if we create the crv data file in a separate art process
-from the trk+cal data file, then we can merge them using the secondary input file
-method.  This only works if the two file creating processes have the same art
-process_name.  That is, the two art processes running under the `artdaq::DataLogger`
-instances must have the same art process_name.
+The Mu2e TDAQ system will write files that are split as follows.  For all triggered events,
+the Tracker (trk) and Calorimeter (cal) related data products will be written to one file
+while the Cosmic Ray Veto (crv) related data prodcuts will be written to a separate file.
+On the trk and cal data are used to trigger events; the crv information is written
+for all events that pass the trigger.  This organziation is driven by resource limitations
+in the TDAQ system.
 
-To exercise this you need to setup an appropriate version of art.
-You can do this by using the current Musing of Offline.
-This should work with any version of art.  If it does not we need to fix it.
+One of the first steps in processing the data will be to join the two files into one.
+We propose to use the secondary input features of art to do this.
+This repo contains some exercises that show that, with an important caveat, this will work.
+The caveat is that the art jobs that write the two data file MUST have the same art process_name.
+
+To do exercise this you need to setup an appropriate version of art; it should
+work with any recent version of art.  For example you can setup the
+current Musing of Offline.
 
 To establish the environment and build the code:
 
@@ -21,26 +25,27 @@ To establish the environment and build the code:
 5. muse setup -1
 5. muse build -j 8
 
-## Example 1.
+## Exercise 1.
 
-Secondary input files are only advertised to work if the secondary files "share a common history with the primary".
-This is the example that is advertised by art to work.  The second exercise will try what we need to do in the TDAQ.
+Secondary input files are advertised to work if the secondary files "share a common history with the primary".
+This first exercise does that explicitly. The second exercise will try the variant needed for merging files created by TDAQ.
+To run the first step:
 
 <pre>
    mu2e -c SecondaryInputs/fcl/all.fcl
 </pre>
 
 This job creates 3 toy data products, one to represent the trk data,
-one for the cal data and one for the crv data.  Each is made by it's own
-module labels maketrk, makecal and makecrv.  The toy data product is
+one for the cal data and one for the crv data.  Each data product is made by its own
+module, with module labels maketrk, makecal and makecrv.  The toy data product is
 a single integer with the structure:
 
 <pre>
    10000*A + N
 </pre>
 
-where A is 1 for the tracker, 2 for the calorimeter and 3 for the crv.
-This job makes 4 art files:   all.art trkcal.art crv_1.art crv_2.art
+where A is 1 for the tracker, 2 for the calorimeter and 3 for the crv; N is the event number.
+This job makes 4 art files:
 
 | File | Content |
 |------|---------|
@@ -76,19 +81,18 @@ as running `read.fcl` on `all.art`.
 
 This exercise mocks up what we will do in the TDAQ: one art job makes
 the trk + cal file while a second art job makes the crv file.
-The third art job merges the two files.
-To start this exercise run two jobs:
+A third art job merges the two files. To start this exercise run two jobs:
 
 <pre>
    mu2e -c SecondaryInputs/fcl/trkcal.fcl
    mu2e -c SecondaryInputs/fcl/crv_tdaq1.fcl
 </pre>
 
-Note that both jobs have the *same* art process_name.  This is critical to making the example work.
+Note that both jobs have the *same* art process_name; this is critical to making the example work.
 
-The first job runs the trk and cal parts of all.fcl and writes out those data products to a file `trkcal_tdaq.art`.
-The second job runs the crv part of all.fcl and writes that data product to the file `crv_tdaq1_1.art` and `crv_tdaq1_2.art`;
-again each of the crv files contain a 5 events.
+The first job runs the trk and cal parts of all.fcl and writes those data products to a file `trkcal_tdaq.art`.
+The second job runs the crv part of all.fcl and writes that data product to the files `crv_tdaq1_1.art` and `crv_tdaq1_2.art`;
+again each of the crv files contains 5 events.
 
 You can verify that these files have the expected content:
 
@@ -106,13 +110,14 @@ and the two `crv_tdaq1*` files as the secondaries:
 This makes the same output as running `read.fcl` on `all.art`.
 It also writes the output file `join_tdaq1.art`.  You can run `read.fcl` on this to verify that it too is correct.
 
-So far it all works.
+So we have an existence proof that this will work for our use case.
+We should add this test as part of the acceptance for a new art or ask that the art team do the equivalent.
 
 
 ## Exercise 3.
 
 This exercise, is almost identical to exercise 2, the difference being that the art process_name of `crv_tdaq2.fcl`
-is different than that of `trkcal.fcl`.  It's file distinguished from those of exercise 2 by the substitution
+is different than that of `trkcal.fcl`.  It's files are distinguished from those of exercise 2 by the substitution
 `tdaq1` with `tdaq2`.  The steps are:
 
 <pre>
@@ -131,5 +136,7 @@ and the two `crv_tdaq2` files as the secondaries:
    mu2e -c SecondaryInputs/fcl/join_tdaq2.fcl
 </pre>
 
-The printout from this job is correct.  The job also writes the output file `join_tdaq2.art`.
+The printout from this job is correct; this surprised me.
+
+The job also writes the output file `join_tdaq2.art`.
 If you inspect this file using `read.fcl` you will see that the crv data products are missing.
