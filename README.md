@@ -140,3 +140,58 @@ The printout from this job is correct; this surprised me.
 
 The job also writes the output file `join_tdaq2.art`.
 If you inspect this file using `read.fcl` you will see that the crv data products are missing.
+
+## Exercise 4.
+
+This exercise mocks up the next level of complexity: we expect that the events written to the
+trk+cal file will not be written in order of increasing `art::EventID`.
+The same for events written to the crv file; moreover the order within the crv file may
+be different than the order in the trk+cal file.
+
+This exercise starts by creating new version of the trk+cal file
+in which the events are ordered randomly.
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/trkcal_split.fcl
+   mu2e -c SecondaryInputs/fcl/gather.fcl -S SecondaryInputs/fcl/trkcal_gather.txt -o data/trkcal_gather.art
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl -s data/trkcal_gather.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/trkcal_gather.art
+</pre>
+The first job generates 20 output files, each containing one event.
+The file SecondaryInputs/fcl/trkcal\_gather.txt lists all 20 files in a random order.
+The second job reads the 20 files in the order specified by trkcal\_gather.txt and writes to the ouptut file specified on the command line.
+The third job reads the newly created output file in the order found within art file.
+The fourth job reads the newly created file the ususal way, with the events sorted in order increasing `art::EventID`.
+
+Inspection of the output  will show that the expected data products are present and that events in trkcal\_gather.art are in the randomized order.
+
+The next step is to do the same for the crv file:
+<pre>
+   mu2e -c SecondaryInputs/fcl/crv_split.fcl
+   mu2e -c SecondaryInputs/fcl/gather.fcl -S SecondaryInputs/fcl/crv_gather.txt -o data/crv_gather.art
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl -s data/crv_gather.art
+   mu2e -c SecondaryInputs/fcl/read.fcl -s data/crv_gather.art
+</pre>
+
+Now the exercise proper can begin:
+<pre>
+   mu2e -c SecondaryInputs/fcl/join_gathered_sort.fcl
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_sort.art
+</pre>
+The first job joins data/trkcal\_gather.art and data/crv\_gather.art into data/split\_gathered\_joined\_sort.art.
+This is the same as exercise 2, except that I did not split the crv file into two files.
+Inspection of the output of these jobs will show that the expected data products are present and that the
+events in the ouput file are written in order of increasing `art::EventID`.
+
+The last part of the exercise is to see if it works if join job does not read the events in sorted order
+from the primary input file:
+<pre>
+   mu2e -c SecondaryInputs/fcl/join_gathered_nosort.fcl
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_nosort.art
+</pre>
+Inspection of the output from the first job shows that art did not correctly find the crv data product
+for any of the events.
+
+
+
+
