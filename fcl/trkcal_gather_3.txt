@@ -1,0 +1,11 @@
+data/trkcal_split_1.art
+data/trkcal_split_17.art
+data/trkcal_split_19.art
+data/trkcal_split_20.art
+data/trkcal_split_7.art
+data/trkcal_split_16.art
+data/trkcal_split_14.art
+data/trkcal_split_8.art
+data/trkcal_split_13.art
+data/trkcal_split_11.art
+data/trkcal_split_4.art

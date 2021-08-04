@@ -172,6 +172,9 @@ This exercise mocks up the next level of complexity: we expect that the events w
 trk+cal file will not be written in order of increasing `art::EventID`.
 The same for events written to the crv file; moreover the order within the crv file may
 be different than the order in the trk+cal file.
+For this exercise the process_name of job that creates the crv file has been set
+to the same process name as was used for the trk+cal file;
+this will be true all future exercises.
 
 This exercise starts by creating new version of the trk+cal file
 in which the events are ordered randomly.
@@ -214,12 +217,13 @@ from the primary input file:
    mu2e -c SecondaryInputs/fcl/join_gathered_nosort.fcl
    mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_nosort.art
 </pre>
-Inspection of the output from the first job shows that art did not correctly find the crv data product
-for any of the events.
+Inspection of the output from the first job shows that, for most events,
+art did not correctly find the crv data product; it only found it for event 7.
+
 
 The conclusion is that we must not use `noEventSort : true` in the configuration of RootInput when
 merging the two data files.  This is probably not a serious constraint because we probably don't
-want to do this anyway.
+need to do this anyway.
 
 ## Exercise 5
 
@@ -238,9 +242,11 @@ The same events were removed from both files.
    mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_sort_1.art
    mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_nosort_1.art
 </pre>
-This has the same result as exercise 4:
+This has a result similar to that of Exercise 4:
 using the default `noEventSort : false` the merged output file is correct
-but using `noEventSort : true` the output file does not contain any crv information.
+but using `noEventSort : true` the output file does not contain crv information
+for most events;
+only event 8 has crv information, which a different event than in Exercise 4.
 
 ## Exercise 6
 This builds on Exercise 5 by making a new file, crv\_gather\_2.txt, that removes 3 events
@@ -255,11 +261,41 @@ they triggered.
    mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_sort_2.art
    mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_nosort_2.art
 </pre>
-This has the same result as exercises 4 and 5:
+This has results similar to those of Exercises 4 and 5:
+using the default `noEventSort : false` the merged output file is correct;
+that is, if the crv information is available,
+then it is present in the merged file
+and, if it is not available,
+then it is simply missing from the merged file and there are no errors reported.
+However, using `noEventSort : true`, the output file does not contain crv information
+for most events; this time it contains crv information for only events 8 and 19.
+
+## Exercise 7
+This builds on Exercise 6 by making a new file, trkcal\_gather\_3.txt, that removes 3 events
+from trkcal\_gather\_1.txt; it stil uses cal\_gather\_2.txt.
+The result is that there will be some events in the crv file that are not present in
+the trk+cal file.
+This can happen if the crv file for offspill contains both triggered events
+and the crv pedestal events, while the trk+cal file contains only triggered events.
+
+In this example there are 3 classes of events: the event is present in both
+the trk+cal file and the crv file; it is present in the trk+cal file but
+not in the crv file; and it is present in the crv file but not in the trk+cal file.
+
+<pre>
+  mu2e -c SecondaryInputs/fcl/gather.fcl -S SecondaryInputs/fcl/trkcal_gather_3.txt -o data/trkcal_gather_3.art
+  mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/trkcal_gather_3.art
+  mu2e -c SecondaryInputs/fcl/join_gathered_sort_3.fcl
+  mu2e -c SecondaryInputs/fcl/join_gathered_nosort_3.fcl
+  mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_sort_3.art
+  mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_nosort_3.art
+</pre>
+This has results similar to that of Exercise 6:
 using the default `noEventSort : false` the merged output file is correct
-but using `noEventSort : true` the output file does not contain any crv information.
-By correct, I mean that if the crv information is available, it is present in the
-merged file and if it is not available it is simply missing from the merged file.
+but , using `noEventSort : true`, the output file does not contain crv information
+for most events; the events with crv information are the same as for Exercise 6.
+
+
 
 
 
