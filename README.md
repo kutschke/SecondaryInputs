@@ -31,8 +31,8 @@ To establish the environment and build the code:
 4. git clone https://github.com/kutschke/SecondaryInputs.git
 5. muse setup -1
 6. muse build -j 8
-7. mkdir <path to your space on a data disk>
-8. ln -s <path to your space on a data disk> data
+7. mkdir \<path to your space on a data disk\>
+8. ln -s \<path to your space on a data disk\> data
 
 Instead of steps 7 and 8 you could just `mkdir data`.
 
