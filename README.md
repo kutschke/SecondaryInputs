@@ -221,7 +221,26 @@ The conclusion is that we must not use `noEventSort : true` in the configuration
 merging the two data files.  This is probably not a serious constraint because we probably don't
 want to do this anyway.
 
+## Exercise 5
 
+This repeats exercise 4 but with new copies of the \*\_gather.txt files
+in which some events were removed
+to mock up what happens when the trigger rejects events.
+The same events were removed from both files.
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/gather.fcl -S SecondaryInputs/fcl/trkcal_gather_1.txt -o data/trkcal_gather_1.art
+   mu2e -c SecondaryInputs/fcl/gather.fcl -S SecondaryInputs/fcl/crv_gather_1.txt -o data/crv_gather_1.art
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/trkcal_gather_1.art
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/crv_gather_1.art
+   mu2e -c SecondaryInputs/fcl/join_gathered_sort_1.fcl
+   mu2e -c SecondaryInputs/fcl/join_gathered_nosort_1.fcl
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_sort_1.art
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_nosort_1.art
+</pre>
+This has the same result as exercise 4:
+using the default `noEventSort : false` the merged output file is correct
+but using `noEventSort : true` the output file does not contain the crv information.
 
 
 

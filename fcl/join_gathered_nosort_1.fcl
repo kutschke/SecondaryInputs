@@ -1,0 +1,48 @@
+#
+# Read 3 data products from a primary file and a secondary input file.
+# Sort the events.
+#
+
+#include "Offline/fcl/minimalMessageService.fcl"
+
+process_name : join
+
+source : {
+  module_type :  RootInput
+  noEventSort : true
+  fileNames   : [ "data/trkcal_gather_1.art" ]
+  secondaryFileNames: [
+     {
+        a : "data/trkcal_gather_1.art"
+        b : [ "data/crv_gather_1.art" ]
+     }
+  ]
+}
+
+
+services : {
+  message : @local::default_message
+}
+
+physics : {
+  analyzers: {
+
+    readall : {
+      module_type : ToyAnalyzer
+      tags        : [ "maketrk", "makecal", "makecrv" ]
+    }
+
+  }
+
+  t1 : [ readall ]
+  e1 : [ outjoin ]
+
+}
+outputs : {
+
+  outjoin : {
+    module_type : RootOutput
+    fileName    : "data/split_gathered_joined_nosort_1.art"
+  }
+
+}
