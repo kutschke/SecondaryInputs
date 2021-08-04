@@ -36,7 +36,7 @@ To establish the environment and build the code:
 
 Instead of steps 7 and 8 you could just `mkdir data`.
 
-## Exercise 1.
+## Exercise 1
 
 Secondary input files are advertised to work if the secondary files "share a common history with the primary".
 This first exercise does that explicitly. The second exercise will try the variant needed for merging files created by TDAQ.
@@ -135,7 +135,7 @@ So we have an existence proof that this will work for the minimal version of our
 We should add this test as part of the acceptance for a new art or ask that the art team do the equivalent.
 
 
-## Exercise 3.
+## Exercise 3
 
 This exercise, is almost identical to exercise 2, the difference being that the art process_name of `crv_tdaq2.fcl`
 is different than that of `trkcal.fcl`.  It's files are distinguished from those of exercise 2 by the substitution
@@ -166,7 +166,7 @@ If you inspect this file using `read.fcl` you will see that the crv data product
    mu2e -c SecondaryInputs/fcl/read.fcl -s data/join_tdaq2.art
 </pre>
 
-## Exercise 4.
+## Exercise 4
 
 This exercise mocks up the next level of complexity: we expect that the events written to the
 trk+cal file will not be written in order of increasing `art::EventID`.
@@ -223,7 +223,7 @@ want to do this anyway.
 
 ## Exercise 5
 
-This repeats exercise 4 but with new copies of the \*\_gather.txt files
+This builds on  exercise 4 by making new copies of the \*\_gather.txt files
 in which some events were removed
 to mock up what happens when the trigger rejects events.
 The same events were removed from both files.
@@ -240,7 +240,26 @@ The same events were removed from both files.
 </pre>
 This has the same result as exercise 4:
 using the default `noEventSort : false` the merged output file is correct
-but using `noEventSort : true` the output file does not contain the crv information.
+but using `noEventSort : true` the output file does not contain any crv information.
+
+## Exercise 6
+This builds on Exercise 5 by making a new file, crv\_gather\_2.txt, that removes 3 events
+from crv\_gather\_1.txt.  This mocks up the TDAQ system missing some crv events even though
+they triggered.
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/gather.fcl -S SecondaryInputs/fcl/crv_gather_2.txt -o data/crv_gather_2.art
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/crv_gather_2.art
+   mu2e -c SecondaryInputs/fcl/join_gathered_sort_2.fcl
+   mu2e -c SecondaryInputs/fcl/join_gathered_nosort_2.fcl
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_sort_2.art
+   mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_nosort_2.art
+</pre>
+This has the same result as exercises 4 and 5:
+using the default `noEventSort : false` the merged output file is correct
+but using `noEventSort : true` the output file does not contain any crv information.
+By correct, I mean that if the crv information is available, it is present in the
+merged file and if it is not available it is simply missing from the merged file.
 
 
 
