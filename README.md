@@ -17,7 +17,7 @@ are issues that we need to work around:
    increasing `art::EventID`; moreover they order will be different in the crv file
    than it is in the trk+cal file.  In this case the job that merges the two
    files into one must not set `noEventSort : true` in the configuration of the RootInput module;
-   the default is `false`.
+   the default is `false`. This is not likely a serious problem.
 
 To do exercise this you need to setup an appropriate version of art; it should
 work with any recent version of art.  For example you can setup the
@@ -250,7 +250,8 @@ only event 8 has crv information, which a different event than in Exercise 4.
 
 ## Exercise 6
 This builds on Exercise 5 by making a new file, crv\_gather\_2.txt, that removes 3 events
-from crv\_gather\_1.txt.  This mocks up the TDAQ system missing some crv events even though
+from crv\_gather\_1.txt; this exercise still uses trkcal\_gather\_1.txt.
+This mocks up the TDAQ system missing some crv events even though
 they triggered.
 
 <pre>
@@ -272,15 +273,16 @@ for most events; this time it contains crv information for only events 8 and 19.
 
 ## Exercise 7
 This builds on Exercise 6 by making a new file, trkcal\_gather\_3.txt, that removes 3 events
-from trkcal\_gather\_1.txt; it stil uses cal\_gather\_2.txt.
+from trkcal\_gather\_1.txt; it still uses cal\_gather\_2.txt.
 The result is that there will be some events in the crv file that are not present in
 the trk+cal file.
 This can happen if the crv file for offspill contains both triggered events
 and the crv pedestal events, while the trk+cal file contains only triggered events.
 
-In this example there are 3 classes of events: the event is present in both
+In this example there all 4 classes of events: the event is present in both
 the trk+cal file and the crv file; it is present in the trk+cal file but
-not in the crv file; and it is present in the crv file but not in the trk+cal file.
+not in the crv file; it is present in the crv file but not in the trk+cal file;
+it is missing from both files.
 
 <pre>
   mu2e -c SecondaryInputs/fcl/gather.fcl -S SecondaryInputs/fcl/trkcal_gather_3.txt -o data/trkcal_gather_3.art
