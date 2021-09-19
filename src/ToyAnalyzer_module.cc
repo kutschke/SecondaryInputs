@@ -52,6 +52,8 @@ namespace mu2e {
     for ( auto tag : _tags ){
       if ( auto h = event.getHandle<int>(tag) ){
         std::cout <<  "   " << tag << ":  " << *h << std::endl;
+      } else{
+        std::cout <<  "   " << "did not find data product with tag " << tag << std::endl;
       }
     }
 
