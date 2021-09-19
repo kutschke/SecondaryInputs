@@ -223,7 +223,7 @@ The second job reads the 20 files in the order specified by trkcal\_gather.txt a
 The third job reads the newly created output file in the order found within art file.
 The fourth job reads the newly created file the ususal way, with the events sorted in order increasing `art::EventID`.
 
-Inspection of the output  will show that the expected data products are present and that events in trkcal\_gather.art are in the randomized order.
+Inspection of the log output will show that the expected data products are present and that events in trkcal\_gather.art are in the randomized order.
 
 The next step is to do the same for the crv file:
 <pre>
@@ -243,7 +243,7 @@ Now the exercise proper can begin:
 The first job joins data/trkcal\_gather.art and data/crv\_gather.art into data/split\_gathered\_joined\_sort.art.
 This is the same as exercise 2, except that I did not split the crv file into two files.
 The next two jobs read back this output file, the second job with sort on read and the third job without.
-Inspection of the output of these jobs will show that the expected data products are present and that the
+Inspection of the log output of these jobs will show that the expected data products are present and that the
 events in the ouput file are written in order of increasing `art::EventID`.
 
 The next part of the exercise is to see if reading events in the primary file in unsorted order when
@@ -253,7 +253,7 @@ doing the join works:
 </pre>
 Inspection of the log output from this shows that, for most events,
 art did not correctly find the crv data product; it only found it for event 7.
-Inspection of the output file using a TBrowser shows that indeed the only event
+Inspection of the log output file using a TBrowser shows that indeed the only event
 for which the crv data product is present is event 7.
 
 As a final check, read the output file produced by this job, both in sorted order
