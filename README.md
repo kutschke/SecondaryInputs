@@ -232,6 +232,7 @@ The next step is to do the same for the crv file:
    mu2e -c SecondaryInputs/fcl/read_nosort.fcl -s data/crv_gather.art
    mu2e -c SecondaryInputs/fcl/read.fcl -s data/crv_gather.art
 </pre>
+The file crv_gather.txt has the same first event as trkcal_gather.txt but otherwise is randomly different.
 
 Now the exercise proper can begin:
 <pre>
@@ -243,14 +244,22 @@ This is the same as exercise 2, except that I did not split the crv file into tw
 Inspection of the output of these jobs will show that the expected data products are present and that the
 events in the ouput file are written in order of increasing `art::EventID`.
 
-The last part of the exercise is to see if it works if join job does not read the events in sorted order
-from the primary input file:
+The next part of the exercise is to see reading events in the primary file in unsorted order works:
 <pre>
    mu2e -c SecondaryInputs/fcl/join_gathered_nosort.fcl
+</pre>
+Inspection of the output from this shows that, for most events,
+art did not correctly find the crv data product; it only found it for event 7.
+Inspection of the output file using a TBrowser shows that indeed the only event
+for which the crv data product is present is event 7.
+
+As a final check, read the output file produced by this job, both in sorted order
+and in unsorted order:
+<pre>
+   mu2e -c SecondaryInputs/fcl/read.fcl data/split_gathered_joined_nosort.art
    mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_nosort.art
 </pre>
-Inspection of the output from the first job shows that, for most events,
-art did not correctly find the crv data product; it only found it for event 7.
+In both jobs the only event with crv information is event 7.
 
 
 The conclusion is that we must not use `noEventSort : true` in the configuration of RootInput when
