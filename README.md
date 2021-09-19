@@ -3,16 +3,18 @@
 The Mu2e TDAQ system will write files that are split as follows.  For all triggered events,
 the Tracker (trk) and Calorimeter (cal) related data products will be written to one file
 while the Cosmic Ray Veto (crv) related data prodcuts will be written to a separate file.
-On the trk and cal data are used to trigger events; the crv information is written
+Only the trk and cal data are used to trigger events; the crv information is written
 for all events that pass the trigger.  This organziation is driven by resource limitations
-in the TDAQ system.
+within the TDAQ system.
 
 One of the first steps in processing the data will be to join the two files into one.
-We propose to use the secondary input features of art to do this.
-This repo contains some exercises that show that the basic funcationality works but there
-are issues that we need to work around:
+One option to join the files is to use the art "secondary input file" feature to do this.
+This repo contains some exercises that show that the basic funcationality works but that
+there are issues that we need to work around:
 
-1. The art jobs that write the two data files MUST have the same art process_name.
+1. The art job that *creates* the crv data products
+   _**must**_ have the same art process_name as the art job that *creates* the trk and cal
+   data products.
 2. We expect that events written to the two files will not be sorted in order of
    increasing `art::EventID`; moreover they order will be different in the crv file
    than it is in the trk+cal file.  In this case the job that merges the two
