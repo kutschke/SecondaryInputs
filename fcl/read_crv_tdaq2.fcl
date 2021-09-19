@@ -1,0 +1,28 @@
+#
+# Test of asking for the crv data product by it's full name.
+#  - using the process name tdaq2
+#
+
+#include "Offline/fcl/minimalMessageService.fcl"
+
+process_name : readdaq
+
+source : { module_type :  RootInput }
+
+services : {
+  message : @local::default_message
+}
+
+physics : {
+  analyzers: {
+
+    readall : {
+      module_type : ToyAnalyzer
+      tags        : [ "makecrv::tdaq2" ]
+    }
+
+  }
+
+  t1 : [ readall ]
+
+}
