@@ -159,38 +159,41 @@ and the two `crv_tdaq2` files as the secondaries:
    mu2e -c SecondaryInputs/fcl/join_tdaq2.fcl
 </pre>
 
-The printout from this job is correct; this surprised me because it is what
+The printout from this job is correct; this surprised me because it is not what
 I understand is the advertised behaviour.
 
 The job also writes the output file `join_tdaq2.art`.
 If you look in `join_tdaq2.art` using a root TBrowser,
-you will see that the data products are, in fact, there.
+you will see that all 3 data products are, in fact, there
+and that they have the expected content.
 
-However, if you inspect this file using `read.fcl` you will see that the crv data products are missing:
+However, if you inspect this file using `read.fcl` it does not find crv data product:
 
 <pre>
    mu2e -c SecondaryInputs/fcl/read.fcl -s data/join_tdaq2.art
 </pre>
 
-This is true even if you ask for them by specifying the process name in the input tag:
+This is true even if you ask for the crv data product by specifying the process name in the input tag:
 
 <pre>
    mu2e -c SecondaryInputs/fcl/read_crv_tdaq2.fcl -s data/join_tdaq2.art
 </pre>
 
-As a test that I did not blunder the fcl file, run it on one of the original crv files from
+As a test that the fcl file is correct, run it on the original crv art files from
 this exercise:
 
 <pre>
    mu2e -c SecondaryInputs/fcl/read_crv_tdaq2.fcl -s data/crv_tdaq2_1.art
+   mu2e -c SecondaryInputs/fcl/read_crv_tdaq2.fcl -s data/crv_tdaq2_2.art
 </pre>
-This produces the expected output.
+These produce the expected output.
 
 And as a second test, look for the crv data product using its full name in the files from
 Exercise 2:
 <pre>
    mu2e -c SecondaryInputs/fcl/read_crv_daq.fcl -s data/join_tdaq1.art
    mu2e -c SecondaryInputs/fcl/read_crv_daq.fcl -s data/crv_tdaq1_1.art
+   mu2e -c SecondaryInputs/fcl/read_crv_daq.fcl -s data/crv_tdaq1_2.art
 </pre>
 These produce the expected output.
 
