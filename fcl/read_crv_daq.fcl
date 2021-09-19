@@ -1,0 +1,28 @@
+#
+# Test of asking for the crv data product by it's full name.
+#  - using the process name daq
+#
+
+#include "Offline/fcl/minimalMessageService.fcl"
+
+process_name : readdaq
+
+source : { module_type :  RootInput }
+
+services : {
+  message : @local::default_message
+}
+
+physics : {
+  analyzers: {
+
+    readall : {
+      module_type : ToyAnalyzer
+      tags        : [ "makecrv::daq" ]
+    }
+
+  }
+
+  t1 : [ readall ]
+
+}
