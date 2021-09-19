@@ -8,7 +8,7 @@ for all events that pass the trigger.  This organziation is driven by resource l
 within the TDAQ system.
 
 One of the first steps in processing the data will be to join the two files into one.
-One option to join the files is to use the art "secondary input file" feature to do this.
+One option to do this is to use the art "secondary input file" feature to do this.
 This repo contains some exercises that show that the basic funcationality works but that
 there are issues that we need to work around:
 
@@ -16,7 +16,7 @@ there are issues that we need to work around:
    _**must**_ have the same art process_name as the art job that *creates* the trk and cal
    data products.
 2. We expect that events written to the two files will not be sorted in order of
-   increasing `art::EventID`; moreover they order will be different in the crv file
+   increasing `art::EventID`; moreover the order may be different in the crv file
    than it is in the trk+cal file.  In this case the job that merges the two
    files into one must not set `noEventSort : true` in the configuration of the RootInput module;
    the default is `false`. This is not likely a serious problem.
@@ -159,14 +159,41 @@ and the two `crv_tdaq2` files as the secondaries:
    mu2e -c SecondaryInputs/fcl/join_tdaq2.fcl
 </pre>
 
-The printout from this job is correct; this surprised me.
+The printout from this job is correct; this surprised me because it is what
+I understand is the advertised behaviour.
 
 The job also writes the output file `join_tdaq2.art`.
-If you inspect this file using `read.fcl` you will see that the crv data products are missing:
+If you look in `join_tdaq2.art` using a root TBrowser,
+you will see that the data products are, in fact, there.
+
+However, if you inspect this file using `read.fcl` you will see that the crv data products are missing:
 
 <pre>
    mu2e -c SecondaryInputs/fcl/read.fcl -s data/join_tdaq2.art
 </pre>
+
+This is true even if you ask for them by specifying the process name in the input tag:
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/read_crv_tdaq2.fcl -s data/join_tdaq2.art
+</pre>
+
+As a test that I did not blunder the fcl file, run it on one of the original crv files from
+this exercise:
+
+<pre>
+   mu2e -c SecondaryInputs/fcl/read_crv_tdaq2.fcl -s data/crv_tdaq2_1.art
+</pre>
+This produces the expected output.
+
+And as a second test, look for the crv data product using its full name in the files from
+Exercise 2:
+<pre>
+   mu2e -c SecondaryInputs/fcl/read_crv_daq.fcl -s data/join_tdaq1.art
+   mu2e -c SecondaryInputs/fcl/read_crv_daq.fcl -s data/crv_tdaq1_1.art
+</pre>
+These produce the expected output.
+
 
 ## Exercise 4
 
