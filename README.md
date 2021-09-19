@@ -237,18 +237,21 @@ The file crv_gather.txt has the same first event as trkcal_gather.txt but otherw
 Now the exercise proper can begin:
 <pre>
    mu2e -c SecondaryInputs/fcl/join_gathered_sort.fcl
+   mu2e -c SecondaryInputs/fcl/read.fcl data/split_gathered_joined_sort.art
    mu2e -c SecondaryInputs/fcl/read_nosort.fcl data/split_gathered_joined_sort.art
 </pre>
 The first job joins data/trkcal\_gather.art and data/crv\_gather.art into data/split\_gathered\_joined\_sort.art.
 This is the same as exercise 2, except that I did not split the crv file into two files.
+The next two jobs read back this output file, the second job with sort on read and the third job without.
 Inspection of the output of these jobs will show that the expected data products are present and that the
 events in the ouput file are written in order of increasing `art::EventID`.
 
-The next part of the exercise is to see reading events in the primary file in unsorted order works:
+The next part of the exercise is to see if reading events in the primary file in unsorted order when
+doing the join works:
 <pre>
    mu2e -c SecondaryInputs/fcl/join_gathered_nosort.fcl
 </pre>
-Inspection of the output from this shows that, for most events,
+Inspection of the log output from this shows that, for most events,
 art did not correctly find the crv data product; it only found it for event 7.
 Inspection of the output file using a TBrowser shows that indeed the only event
 for which the crv data product is present is event 7.
@@ -263,8 +266,8 @@ In both jobs the only event with crv information is event 7.
 
 
 The conclusion is that we must not use `noEventSort : true` in the configuration of RootInput when
-merging the two data files.  This is probably not a serious constraint because we probably don't
-need to do this anyway.
+merging the crv file into the trk+cal files.
+It is not yet know if the time penalty that this imposes is signficiant or irrelevant.
 
 ## Exercise 5
 
